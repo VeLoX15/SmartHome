@@ -1,0 +1,52 @@
+﻿@page "/"
+@namespace SmartHome.Pages
+@using Microsoft.AspNetCore.Components.Web;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no" />
+    <base href="~/" />
+
+    <link rel="stylesheet" href="/assets/css/app.css" />
+    <link rel="stylesheet" href="/assets/css/custom.css" />
+    <link rel="stylesheet" href="/assets/css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" href="/assets/lib/bootstrap-icons/bootstrap-icons.css" />
+    <link rel="stylesheet" href="/assets/extensions/sweetalert2/sweetalert2.min.css" />
+    <link rel="stylesheet" href="/assets/extensions/toastr/toastr.min.css" />
+    <link href="ERP.styles.css" rel="stylesheet" />
+
+    <link href="/site.webmanifest" rel="manifest" />
+    <component type="typeof(HeadOutlet)" render-mode="Server" />
+
+</head>
+
+<body>
+
+    <component type="typeof(App)" render-mode="Server" />
+
+    <div id="blazor-error-ui">
+        <environment include="Staging,Production">
+            An error has occurred. This application may no longer respond until reloaded.
+        </environment>
+        <environment include="Development">
+            An unhandled exception has occurred. See browser dev tools for details.
+        </environment>
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script src="/assets/extensions/jquery/jquery.min.js"></script>
+    <script src="/assets/js/bootstrap.js"></script>
+    <script src="/assets/js/blazor-scripts.js"></script>
+    <script src="/assets/extensions/sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="/assets/extensions/toastr/toastr.min.js"></script>
+    <script src="/_framework/blazor.server.js"></script>
+
+</body>
+
+</html>
+

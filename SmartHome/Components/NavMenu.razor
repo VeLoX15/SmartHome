@@ -1,0 +1,128 @@
+﻿@using System.Runtime.InteropServices
+
+<h3 class="text-center">Smart Home</h3>
+
+<ul class="menu">
+    <li class="sidebar-item">
+        <NavLink href="/" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
+            <i class="bi bi-speedometer"></i>
+            <span>Dashboard</span>
+        </NavLink>
+    </li>
+
+    <AuthorizeView Roles="@($"{Roles.VIEW_LIVING_ROOM}, {Roles.VIEW_KITCHEN}, {Roles.VIEW_BATHROOM}, {Roles.VIEW_BEDROOM}, {Roles.VIEW_CORRIDOR}")">
+        <Authorized>
+            <li class="sidebar-title">Managements</li>
+        </Authorized>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="@(Roles.VIEW_LIVING_ROOM)">
+        <Authorized>
+            <li class="sidebar-item">
+                <NavLink href="/Management/LivingRoom" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
+                    <i class="bi bi-stack"></i>
+                    <span>Living Room</span>
+                </NavLink>
+            </li>
+        </Authorized>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="@(Roles.VIEW_KITCHEN)">
+        <Authorized>
+            <li class="sidebar-item">
+                <NavLink href="/Management/Kitchen" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
+                    <i class="bi bi-box-fill"></i>
+                    <span>Kitchen</span>
+                </NavLink>
+            </li>
+        </Authorized>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="@(Roles.VIEW_BATHROOM)">
+        <Authorized>
+            <li class="sidebar-item">
+                <NavLink href="/Management/Bathroom" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
+                    <i class="bi bi-archive-fill"></i>
+                    <span>Bathroom</span>
+                </NavLink>
+            </li>
+        </Authorized>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="@(Roles.VIEW_BEDROOM)">
+        <Authorized>
+            <li class="sidebar-item">
+                <NavLink href="/Management/Bedroom" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
+                    <i class="bi bi-cart-fill"></i>
+                    <span>Bedroom</span>
+                </NavLink>
+            </li>
+        </Authorized>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="@(Roles.VIEW_CORRIDOR)">
+        <Authorized>
+            <li class="sidebar-item">
+                <NavLink href="/Management/Corridor" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
+                    <i class="bi bi-person-vcard-fill"></i>
+                    <span>Corridor</span>
+                </NavLink>
+            </li>
+        </Authorized>
+    </AuthorizeView>
+
+
+
+    <AuthorizeView Roles="@($"{Roles.VIEW_HOUSE}")">
+        <Authorized>
+            <li class="sidebar-title">Statistics</li>
+        </Authorized>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="@(Roles.VIEW_HOUSE)">
+        <Authorized>
+            <li class="sidebar-item">
+                <NavLink href="/Overview/House" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
+                    <i class="bi bi-graph-up"></i>
+                    <span>House</span>
+                </NavLink>
+            </li>
+        </Authorized>
+    </AuthorizeView>
+
+
+
+    <li class="sidebar-title">Account</li>
+    <AuthorizeView>
+        <Authorized>
+            <li class="sidebar-item">
+                <NavLink href="/Account/Details" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
+                    <i class="bi bi-person-fill"></i>
+                    <span>Account</span>
+                </NavLink>
+            </li>
+
+            <li class="sidebar-item">
+                <form method="post" action="/Account/Logout">
+                    <button type="submit" class="btn btn-danger btn-block text-left sidebar-link logout-button">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Logout</span>
+                    </button>
+                </form>
+            </li>
+        </Authorized>
+        <NotAuthorized>
+            <li class="sidebar-item">
+                <NavLink href="/Account/Login" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
+                    <i class="bi bi-person-fill"></i>
+                    <span>Login</span>
+                </NavLink>
+            </li>
+        </NotAuthorized>
+    </AuthorizeView>
+</ul>
+
+<p class="text-center">
+    Ver. @Program.GetVersion()
+    <div>@RuntimeInformation.FrameworkDescription / @RuntimeInformation.ProcessArchitecture</div>
+</p>

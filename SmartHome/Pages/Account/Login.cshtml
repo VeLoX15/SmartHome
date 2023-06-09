@@ -1,0 +1,65 @@
+﻿@page
+@using SmartHome.Core.Services;
+@model SmartHome.Pages.Account.LoginModel
+@{
+    Layout = null;
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Home - Login</title>
+    <link rel="stylesheet" href="/assets/css/app.css" />
+    <link rel="stylesheet" href="/assets/css/auth.css" />
+    <link rel="stylesheet" href="/assets/css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" href="/assets/lib/bootstrap-icons/bootstrap-icons.css" />
+
+    <link href="/site.webmanifest" rel="manifest" />
+</head>
+
+<body>
+    <div id="auth">
+
+        <div class="row h-100">
+            <div class="col-lg-6 offset-lg-3 col-12">
+                <div id="auth-left">
+                    <div class="auth-logo">
+                    </div>
+                    <h2 class="auth-title">Login</h2>
+                    <p class="auth-subtitle mb-5"></p>
+
+                    <form method="post">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <div class="form-group position-relative has-icon-left mb-4">
+                            <input asp-for="Input.Username" type="text" class="form-control form-control-xl" placeholder="Username">
+                            <div class="form-control-icon">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+                            <span asp-validation-for="Input.Username" class="text-danger"></span>
+                        </div>
+                        <div class="form-group position-relative has-icon-left mb-4">
+                            <input asp-for="Input.Password" type="password" class="form-control form-control-xl" placeholder="Passwort">
+                            <div class="form-control-icon">
+                                <i class="bi bi-key-fill"></i>
+                            </div>
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+                        <div class="form-check form-check-lg d-flex align-items-end">
+                            <input asp-for="Input.RememberMe" class="form-check-input me-2" id="flexCheckDefault">
+                            <label asp-for="Input.RememberMe" class="form-check-label text-gray-600" for="flexCheckDefault">
+                                @Html.DisplayNameFor(m => m.Input.RememberMe)
+                            </label>
+                        </div>
+                        <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5 mb-3">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

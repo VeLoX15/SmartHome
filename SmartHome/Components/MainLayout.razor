@@ -1,0 +1,70 @@
+﻿@inherits LayoutComponentBase
+@inject IJSRuntime JSRuntime
+@using System.Runtime.InteropServices
+
+<PageTitle>Smart Home</PageTitle>
+
+<div id="app">
+    <div id="sidebar" class="@(ShowMenu ? "active" : string.Empty)">
+        <div class="sidebar-wrapper active">
+            <div class="sidebar-header position-relative">
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div role="button" class="sidebar-toggler  x">
+                        <span class="sidebar-hide d-xl-none d-block" @onclick="TriggerMenuAsync"><i class="bi bi-x-lg"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-menu">
+                <NavMenu />
+            </div>
+        </div>
+    </div>
+    <div id="main">
+
+        <header class="mb-3 d-block d-xl-none">
+            <span role="button" @onclick="TriggerMenuAsync" class="burger-btn d-block d-xl-none menu-button">
+                <i class="bi bi-list"></i>
+            </span>
+        </header>
+
+        <div class="page-content">
+            <section class="row">
+                @Body
+            </section>
+        </div>
+
+        <footer>
+            <div class="footer clearfix mb-0 text-muted">
+                <p class="text-right">
+                    @DateTime.Now.Year &copy; Tablebricks
+                </p>
+            </div>
+        </footer>
+    </div>
+</div>
+
+
+
+@code {
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("blazorHelpers.startUp");
+            ShowMenu = await JSRuntime.InvokeAsync<bool>("blazorHelpers.isDesktop");
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task TriggerMenuAsync()
+    {
+        bool isDesktop = await JSRuntime.InvokeAsync<bool>("blazorHelpers.isDesktop");
+        ShowMenu = !ShowMenu;
+    }
+
+    public bool ShowMenu { get; set; }
+}

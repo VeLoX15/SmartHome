@@ -1,0 +1,99 @@
+﻿@page "/Account/Details"
+@attribute [Authorize]
+@inject AuthService authService
+<PageTitle>Accountdetails</PageTitle>
+<h3>Accountdetails</h3>
+
+
+@if (CurrentUser is not null)
+{
+
+    <div class="col-12 col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Information</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    <p class="card-text">
+                        The following information will be used by the app.
+                    </p>
+                    <div class="table-responsive">
+                        <table class="table table-lg">
+                            <tbody>
+                                <tr>
+                                    <td class="text-bold-500">Name</td>
+                                    <td>@CurrentUser.DisplayName</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold-500">Username</td>
+                                    <td>@CurrentUser.Username</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold-500">UserId</td>
+                                    <td>@CurrentUser.UserId</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold-500">Email</td>
+                                    <td>@CurrentUser.Email</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold-500">Account type</td>
+                                    <td>
+                                        <p>@(CurrentUser.ActiveDirectoryGuid != null ? "Active Directory" : "Local")</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Permissions</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    <p class="card-text">
+                        Overview of all your permissions.
+                    </p>
+                    <div class="table-responsive">
+                        <table class="table table-lg">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (CurrentUser.Permissions.Any())
+                                {
+                                    @foreach (var permission in CurrentUser.Permissions)
+                                    {
+                                        @if (_user?.IsInRole(permission.Identifier) == true)
+                                        {
+                                            <tr>
+                                                <td class="text-bold-500">@permission.Name</td>
+                                                <td>@permission.Description</td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="2">You do not have extended permissions.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
