@@ -33,16 +33,6 @@
                                     <td class="text-bold-500">UserId</td>
                                     <td>@CurrentUser.UserId</td>
                                 </tr>
-                                <tr>
-                                    <td class="text-bold-500">Email</td>
-                                    <td>@CurrentUser.Email</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-bold-500">Account type</td>
-                                    <td>
-                                        <p>@(CurrentUser.ActiveDirectoryGuid != null ? "Active Directory" : "Local")</p>
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -76,10 +66,7 @@
                                     {
                                         @if (_user?.IsInRole(permission.Identifier) == true)
                                         {
-                                            <tr>
-                                                <td class="text-bold-500">@permission.Name</td>
-                                                <td>@permission.Description</td>
-                                            </tr>
+                                            //TODO
                                         }
                                     }
                                 }

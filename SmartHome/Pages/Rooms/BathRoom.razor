@@ -1,0 +1,9 @@
+﻿@page "/Rooms/Bathroom"
+@attribute [Authorize]
+@inject IStringLocalizer<App> localizer
+
+<PageTitle>@localizer["TABLEBRICKS"] - @localizer["BATHROOM"]</PageTitle>
+
+    <h3>@localizer["BATHROOM"]</h3>
+
+<img src="assets/img/rooms/bathroom.svg" alt="@localizer["BATHROOM"]" style="max-height: 900px;">

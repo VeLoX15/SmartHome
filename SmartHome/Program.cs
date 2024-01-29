@@ -2,6 +2,7 @@ using Dapper;
 using DbController.TypeHandler;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using SmartHome.Core.Services;
+using Syncfusion.Blazor;
 using System.Reflection;
 
 namespace SmartHome
@@ -25,6 +26,8 @@ namespace SmartHome
                     options.DetailedErrors = true;
                 });
 
+            builder.Services.AddSyncfusionBlazor();
+
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, configureOptions =>
                 {
@@ -33,18 +36,20 @@ namespace SmartHome
             builder.Services.AddScoped<PermissionService>();
             builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<AuthService>();
+            builder.Services.AddLocalization(options =>
+            {
+                options.ResourcesPath = "Languages";
+            });
 
             builder.Configuration.AddJsonFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "appsettings.json"), false, true);
 
-            // FluentValidation
-            //builder.Services.AddValidatorsFromAssembly(Assembly.LoadFrom(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SmartHome.Core.dll")));
             var app = builder.Build();
             using var serviceScope = app.Services.CreateScope();
 
             var services = serviceScope.ServiceProvider;
 
 
-            await AppdatenService.InitAsync(builder.Configuration);
+            await AppdataService.InitAsync(builder.Configuration);
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -53,6 +58,13 @@ namespace SmartHome
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            var localizationOptions = new RequestLocalizationOptions()
+                .SetDefaultCulture(AppdataService.SupportedCultures[0].Name)
+                .AddSupportedCultures(AppdataService.SupportedCultureCodes)
+                .AddSupportedUICultures(AppdataService.SupportedCultureCodes);
+
+            app.UseRequestLocalization(localizationOptions);
 
             app.UseHttpsRedirection();
 

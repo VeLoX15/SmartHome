@@ -1,4 +1,5 @@
 ﻿using DbController;
+using SmartHome.Core.Models;
 
 namespace SmartHome.Core.Models
 {
@@ -10,16 +11,13 @@ namespace SmartHome.Core.Models
         public string Username { get; set; } = string.Empty;
         [CompareField("display_name")]
         public string DisplayName { get; set; } = string.Empty;
-        [CompareField("active_directory_guid")]
-        public Guid? ActiveDirectoryGuid { get; set; }
-        [CompareField("email")]
-        public string Email { get; set; } = string.Empty;
         [CompareField("password")]
         public string Password { get; set; } = string.Empty;
         [CompareField("salt")]
         public string Salt { get; set; } = string.Empty;
-        [CompareField("origin")]
-        public string Origin { get; set; } = string.Empty;
+        [CompareField("last_login")]
+        public DateTime LastLogin { get; set; }
+        [CompareField("image")]
 
         public List<Permission> Permissions { get; set; } = new();
         public int Id => UserId;
@@ -31,11 +29,9 @@ namespace SmartHome.Core.Models
                 { "USER_ID", UserId },
                 { "USERNAME", Username },
                 { "DISPLAY_NAME", DisplayName },
-                { "ACTIVE_DIRECTORY_GUID", ActiveDirectoryGuid?.ToString() },
-                { "EMAIL", Email },
                 { "PASSWORD", Password },
                 { "SALT", Salt },
-                { "ORIGIN", Origin }
+                { "LAST_LOGIN", LastLogin }
             };
         }
     }

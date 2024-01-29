@@ -16,26 +16,22 @@ namespace SmartHome.Core.Services
         public async Task CreateAsync(User input, IDbController dbController, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            string sql = $@"INSERT INTO users
-    (
-    username,
-    display_name,
-    active_directory_guid,
-    email,
-    password,
-    salt,
-    origin
-    )
-    VALUES 
-    (
-    @USERNAME,
-    @DISPLAY_NAME,
-    @ACTIVE_DIRECTORY_GUID,
-    @EMAIL,
-    @PASSWORD,
-    @SALT,
-    @ORIGIN
-    ); {dbController.GetLastIdSql()}";
+            string sql = $@"INSERT INTO `smart_home`.`users`
+                (
+                `username`,
+                `display_name`,
+                `password`,
+                `salt`,
+                `last_login`
+                )
+                VALUES 
+                (
+                @USERNAME,
+                @DISPLAY_NAME,
+                @PASSWORD,
+                @SALT,
+                @LAST_LOGIN
+                ); {dbController.GetLastIdSql()}";
 
             input.UserId = await dbController.GetFirstAsync<int>(sql, input.GetParameters(), cancellationToken);
 
@@ -45,18 +41,18 @@ namespace SmartHome.Core.Services
         public async Task DeleteAsync(User input, IDbController dbController, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            string sql = "DELETE FROM users WHERE user_id = @USER_ID";
+            string sql = "DELETE FROM `smart_home`.`users``WHERE `user_id` = @USER_ID";
 
             await dbController.QueryAsync(sql, new
             {
-                USER_ID = input.UserId,
+                USER_ID = input.UserId
             }, cancellationToken);
         }
 
         public async Task<User?> GetAsync(int userId, IDbController dbController, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            string sql = @"SELECT * FROM users WHERE user_id = @USER_ID";
+            string sql = @"SELECT * FROM `smart_home`.`users` WHERE `user_id` = @USER_ID";
 
             var user = await dbController.GetFirstAsync<User>(sql, new
             {
@@ -70,26 +66,11 @@ namespace SmartHome.Core.Services
 
             return user;
         }
-        public async Task<User?> GetAsync(Guid guid, IDbController dbController, CancellationToken cancellationToken = default)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            string sql = @"SELECT * FROM users WHERE active_directory_guid = @ACTIVE_DIRECTORY_GUID AND origin = 'ad'";
 
-            var user = await dbController.GetFirstAsync<User>(sql, new
-            {
-                ACTIVE_DIRECTORY_GUID = guid
-            }, cancellationToken);
-
-            if (user is not null)
-            {
-                user.Permissions = await _permissionService.GetUserPermissionsAsync(user.UserId, dbController, cancellationToken);
-            }
-            return user;
-        }
         public async Task<User?> GetAsync(string username, IDbController dbController, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            string sql = @"SELECT * FROM users WHERE UPPER(username) = UPPER(@USERNAME) AND origin = 'local'";
+            string sql = @"SELECT * FROM `smart_home`.`users` WHERE UPPER(username) = UPPER(@USERNAME)";
 
             var user = await dbController.GetFirstAsync<User>(sql, new
             {
@@ -108,9 +89,9 @@ namespace SmartHome.Core.Services
         {
             cancellationToken.ThrowIfCancellationRequested();
             StringBuilder sqlBuilder = new();
-            sqlBuilder.Append("SELECT * FROM users WHERE 1 = 1");
+            sqlBuilder.Append("SELECT `user_id`, `username`, `display_name`, `description`, `last_login`, `image` FROM `smart_home`.`users` WHERE 1 = 1");
             sqlBuilder.AppendLine(GetFilterWhere(filter));
-            sqlBuilder.AppendLine(@$"  ORDER BY user_id DESC");
+            sqlBuilder.AppendLine(@$"  ORDER BY `user_id` DESC");
             sqlBuilder.AppendLine(dbController.GetPaginationSyntax(filter.PageNumber, filter.Limit));
 
             // Zum Debuggen schreiben wir den Wert einmal als Variabel
@@ -121,7 +102,7 @@ namespace SmartHome.Core.Services
             // Berechtigungen müssen noch geladen werden
             List<Permission> permissions = await PermissionService.GetAllAsync(dbController);
 
-            sql = "SELECT * FROM user_permissions";
+            sql = "SELECT * FROM `smart_home`.`user_permissions`";
             List<UserPermission> user_permissions = await dbController.SelectDataAsync<UserPermission>(sql, null, cancellationToken);
 
             foreach (var user in list)
@@ -131,8 +112,6 @@ namespace SmartHome.Core.Services
 
                 user.Permissions = permissions.Where(x => permission_ids.Contains(x.PermissionId)).ToList();
             }
-
-
 
             return list;
         }
@@ -154,16 +133,9 @@ namespace SmartHome.Core.Services
                 sb.AppendLine(@" AND 
 (
         UPPER(display_name) LIKE @SEARCHPHRASE
-    OR  UPPER(email) LIKE @SEARCHPHRASE
     OR  UPPER(username) LIKE @SEARCHPHRASE
 )");
             }
-
-            //if (filter.BlockedIds.Any())
-            //{
-            //    sb.AppendLine($" AND user_id NOT IN ({string.Join(",", filter.BlockedIds)})");
-            //}
-
 
             string sql = sb.ToString();
             return sql;
@@ -173,7 +145,7 @@ namespace SmartHome.Core.Services
         {
             cancellationToken.ThrowIfCancellationRequested();
             StringBuilder sqlBuilder = new();
-            sqlBuilder.AppendLine("SELECT COUNT(*) FROM users WHERE 1 = 1");
+            sqlBuilder.AppendLine("SELECT COUNT(*) FROM `smart_home`.`users` WHERE 1 = 1");
             sqlBuilder.AppendLine(GetFilterWhere(filter));
 
             string sql = sqlBuilder.ToString();
@@ -186,19 +158,30 @@ namespace SmartHome.Core.Services
         public async Task UpdateAsync(User input, IDbController dbController, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            string sql = @"UPDATE users SET
-username = @USERNAME,
-display_name = @DISPLAY_NAME,
-email = @EMAIL
+            string sql = @"UPDATE `smart_home`.`users` SET
+`username` = @USERNAME,
+`display_name` = @DISPLAY_NAME
 WHERE user_id = @USER_ID";
 
             await dbController.QueryAsync(sql, input.GetParameters(), cancellationToken);
 
             await _permissionService.UpdateUserPermissionsAsync(input, dbController, cancellationToken);
         }
+
+        public async Task UpdateLastLoginAsync(User input, IDbController dbController, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            input.LastLogin = DateTime.Now;
+            string sql = @"UPDATE `smart_home`.`users` SET
+`last_login` = @LAST_LOGIN
+WHERE user_id = @USER_ID";
+
+            await dbController.QueryAsync(sql, input.GetParameters(), cancellationToken);
+        }
+
         public static async Task<bool> FirstUserExistsAsync(IDbController dbController)
         {
-            string sql = "SELECT * FROM users";
+            string sql = "SELECT * FROM `smart_home`.`users`";
 
             var tmp = await dbController.GetFirstAsync<object>(sql);
 

@@ -1,6 +1,7 @@
 ﻿@using System.Runtime.InteropServices
+@inject IStringLocalizer<App> localizer
 
-<h3 class="text-center">Smart Home</h3>
+<h3 class="text-center">@localizer["TABLEBRICKS_UPPER"] @localizer["AUTOMATION_UPPER"]</h3>
 
 <ul class="menu">
     <li class="sidebar-item">
@@ -10,18 +11,18 @@
         </NavLink>
     </li>
 
-    <AuthorizeView Roles="@($"{Roles.VIEW_LIVING_ROOM}, {Roles.VIEW_KITCHEN}, {Roles.VIEW_BATHROOM}, {Roles.VIEW_BEDROOM}, {Roles.VIEW_CORRIDOR}")">
+    <AuthorizeView Roles="@($"{Roles.VIEW_LIVING_ROOM}, {Roles.VIEW_KITCHEN}, {Roles.VIEW_BATHROOM}, {Roles.VIEW_BEDROOM}, {Roles.VIEW_STORAGE_ROOM}, {Roles.VIEW_HALLWAY}")">
         <Authorized>
-            <li class="sidebar-title">Managements</li>
+            <li class="sidebar-title">@localizer["ROOMS"]</li>
         </Authorized>
     </AuthorizeView>
 
     <AuthorizeView Roles="@(Roles.VIEW_LIVING_ROOM)">
         <Authorized>
             <li class="sidebar-item">
-                <NavLink href="/Management/LivingRoom" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
-                    <i class="bi bi-stack"></i>
-                    <span>Living Room</span>
+                <NavLink href="/Rooms/LivingRoom" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
+                    <i class="fa-solid fa-couch"></i>
+                    <span>@localizer["LIVING_ROOM"]</span>
                 </NavLink>
             </li>
         </Authorized>
@@ -30,9 +31,9 @@
     <AuthorizeView Roles="@(Roles.VIEW_KITCHEN)">
         <Authorized>
             <li class="sidebar-item">
-                <NavLink href="/Management/Kitchen" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
-                    <i class="bi bi-box-fill"></i>
-                    <span>Kitchen</span>
+                <NavLink href="/Rooms/Kitchen" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
+                    <i class="fa-solid fa-kitchen-set"></i>
+                    <span>@localizer["KITCHEN"]</span>
                 </NavLink>
             </li>
         </Authorized>
@@ -41,9 +42,9 @@
     <AuthorizeView Roles="@(Roles.VIEW_BATHROOM)">
         <Authorized>
             <li class="sidebar-item">
-                <NavLink href="/Management/Bathroom" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
-                    <i class="bi bi-archive-fill"></i>
-                    <span>Bathroom</span>
+                <NavLink href="/Rooms/Bathroom" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
+                    <i class="fa-solid fa-bath"></i>
+                    <span>@localizer["BATHROOM"]</span>
                 </NavLink>
             </li>
         </Authorized>
@@ -52,61 +53,51 @@
     <AuthorizeView Roles="@(Roles.VIEW_BEDROOM)">
         <Authorized>
             <li class="sidebar-item">
-                <NavLink href="/Management/Bedroom" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
-                    <i class="bi bi-cart-fill"></i>
-                    <span>Bedroom</span>
+                <NavLink href="/Rooms/Bedroom" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
+                    <i class="fa-solid fa-bed"></i>
+                    <span>@localizer["BEDROOM"]</span>
                 </NavLink>
             </li>
         </Authorized>
     </AuthorizeView>
 
-    <AuthorizeView Roles="@(Roles.VIEW_CORRIDOR)">
+    <AuthorizeView Roles="@(Roles.VIEW_STORAGE_ROOM)">
         <Authorized>
             <li class="sidebar-item">
-                <NavLink href="/Management/Corridor" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
-                    <i class="bi bi-person-vcard-fill"></i>
-                    <span>Corridor</span>
+                <NavLink href="/Rooms/StorageRoom" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
+                    <i class="fa-solid fa-box-archive"></i>
+                    <span>@localizer["STORAGE_ROOM"]</span>
                 </NavLink>
             </li>
         </Authorized>
     </AuthorizeView>
 
-
-
-    <AuthorizeView Roles="@($"{Roles.VIEW_HOUSE}")">
-        <Authorized>
-            <li class="sidebar-title">Statistics</li>
-        </Authorized>
-    </AuthorizeView>
-
-    <AuthorizeView Roles="@(Roles.VIEW_HOUSE)">
+    <AuthorizeView Roles="@(Roles.VIEW_HALLWAY)">
         <Authorized>
             <li class="sidebar-item">
-                <NavLink href="/Overview/House" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
-                    <i class="bi bi-graph-up"></i>
-                    <span>House</span>
+                <NavLink href="/Rooms/Hallway" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
+                    <i class="fa-solid fa-door-open"></i>
+                    <span>@localizer["HALLWAY"]</span>
                 </NavLink>
             </li>
         </Authorized>
     </AuthorizeView>
 
-
-
-    <li class="sidebar-title">Account</li>
+    <li class="sidebar-title">@localizer["ACCOUNT"]</li>
     <AuthorizeView>
         <Authorized>
             <li class="sidebar-item">
                 <NavLink href="/Account/Details" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
-                    <i class="bi bi-person-fill"></i>
-                    <span>Account</span>
+                    <i class="fa-solid fa-user"></i>
+                    <span>@localizer["ACCOUNT"]</span>
                 </NavLink>
             </li>
 
             <li class="sidebar-item">
                 <form method="post" action="/Account/Logout">
                     <button type="submit" class="btn btn-danger btn-block text-left sidebar-link logout-button">
-                        <i class="bi bi-box-arrow-right"></i>
-                        <span>Logout</span>
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>@localizer["LOGOUT"]</span>
                     </button>
                 </form>
             </li>
@@ -114,8 +105,8 @@
         <NotAuthorized>
             <li class="sidebar-item">
                 <NavLink href="/Account/Login" class='sidebar-link blazor-link' Match="NavLinkMatch.All">
-                    <i class="bi bi-person-fill"></i>
-                    <span>Login</span>
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>@localizer["LOGIN"]</span>
                 </NavLink>
             </li>
         </NotAuthorized>
@@ -126,3 +117,9 @@
     Ver. @Program.GetVersion()
     <div>@RuntimeInformation.FrameworkDescription / @RuntimeInformation.ProcessArchitecture</div>
 </p>
+
+<div class="d-flex justify-content-center pb-5">
+    <div class="culture-wrapper">
+        <CultureSelector />
+    </div>
+</div>

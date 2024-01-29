@@ -1,8 +1,9 @@
 ﻿@inherits LayoutComponentBase
 @inject IJSRuntime JSRuntime
+@inject IStringLocalizer<App> localizer
 @using System.Runtime.InteropServices
 
-<PageTitle>Smart Home</PageTitle>
+<PageTitle>@localizer["TABLEBRICKS_UPPER"] @localizer["AUTOMATION_UPPER"]</PageTitle>
 
 <div id="app">
     <div id="sidebar" class="@(ShowMenu ? "active" : string.Empty)">
@@ -37,7 +38,7 @@
         <footer>
             <div class="footer clearfix mb-0 text-muted">
                 <p class="text-right">
-                    @DateTime.Now.Year &copy; Tablebricks
+                    @DateTime.Now.Year &copy; Tablebricks Automation
                 </p>
             </div>
         </footer>

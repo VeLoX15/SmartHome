@@ -2,11 +2,21 @@
 using DbController.MySql;
 using Microsoft.Extensions.Configuration;
 using SmartHome.Core.Models;
+using SmartHome.Core.Interfaces;
+using System.Globalization;
 
 namespace SmartHome.Core.Services
 {
-    public static class AppdatenService
+    public static class AppdataService
     {
+        public static string[] SupportedCultureCodes => SupportedCultures.Select(x => x.Name).ToArray();
+
+        public static CultureInfo[] SupportedCultures => new CultureInfo[]
+        {
+            new CultureInfo("de"),
+            new CultureInfo("en")
+        };
+
         public static bool FirstUserExists { get; set; } = false;
 
         public static List<Permission> Permissions { get; set; } = new();
@@ -71,34 +81,26 @@ namespace SmartHome.Core.Services
             return list;
         }
 
-        /// <summary>
-        /// Gets the corresponding item for the specified ID.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="id"></param>
-        /// <returns>When found this method returns an item of type <see cref="T"/>, otherwise it returns null.</returns>
-        public static T? Get<T>(int id) where T : class, IDbModel, new()
-        {
-            if (id is 0)
-            {
-                return null;
-            }
-
-            List<T> list = GetList<T>();
-
-            T? item = list.FirstOrDefault(x => x.Id == id);
-
-            return item;
-        }
-
         public static string ConnectionString => _configuration?["ConnectionString"] ?? string.Empty;
-        public static bool IsLdapLoginEnabled => _configuration?.GetSection("LdapSettings").GetValue<bool>("ENABLE_LDAP_LOGIN") ?? false;
-        public static bool IsLocalLoginEnabled => _configuration?.GetSection("LdapSettings").GetValue<bool>("ENABLE_LOCAL_LOGIN") ?? false;
-        public static string LdapServer => _configuration?["LdapSettings:LDAP_SERVER"] ?? string.Empty;
-        public static string LdapDomainServer => _configuration?["LdapSettings:DOMAIN_SERVER"] ?? string.Empty;
-        public static string LdapDistinguishedName => _configuration?["LdapSettings:DistinguishedName"] ?? string.Empty;
 
-        public static Dictionary<string, string> MimeTypes => _configuration?.GetSection("MimeTypes").GetChildren().ToDictionary(x => x.Key, x => x.Value!) ?? new Dictionary<string, string>();
+        public static string BridgeIP => _configuration?["HueConnection:BridgeIP"] ?? string.Empty;
+        public static string UserID => _configuration?["HueConnection:UserID"] ?? string.Empty;
+
         public static int PageLimit => _configuration?.GetValue<int>("PageLimit") ?? 30;
+
+        public static CultureInfo ToCulture(this ILocalizationHelper helper)
+        {
+
+            var culture = SupportedCultures.FirstOrDefault(x => x.TwoLetterISOLanguageName.Equals(helper.Code, StringComparison.OrdinalIgnoreCase));
+
+            if (culture is null)
+            {
+                return SupportedCultures[0];
+            }
+            else
+            {
+                return culture;
+            }
+        }
     }
 }

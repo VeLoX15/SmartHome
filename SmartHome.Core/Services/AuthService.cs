@@ -16,6 +16,7 @@ namespace SmartHome.Core.Services
             _authenticationStateProvider = authenticationStateProvider;
             _userService = userService;
         }
+
         /// <summary>
         /// Converts the active claims into a <see cref="User"/> object
         /// </summary>
@@ -34,11 +35,10 @@ namespace SmartHome.Core.Services
                 }
 
                 var userId = Convert.ToInt32(claim.Value);
-
                 bool shouldDispose = dbController is null;
 
 
-                dbController ??= new MySqlController(AppdatenService.ConnectionString);
+                dbController ??= new MySqlController(AppdataService.ConnectionString);
 
                 var result = await _userService.GetAsync(userId, dbController);
 
@@ -52,6 +52,7 @@ namespace SmartHome.Core.Services
 
             return null;
         }
+
         /// <summary>
         /// Checks if the currently logged in user as a specific role within it's claims.
         /// </summary>

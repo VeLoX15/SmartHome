@@ -9,16 +9,16 @@ namespace SmartHome.Core.Services
         {
             cancellationToken.ThrowIfCancellationRequested();
             string sql = @"SELECT p.*
-    FROM user_permissions up
-    INNER JOIN permissions p ON (p.permission_id = up.permission_id)
-    WHERE user_id = @USER_ID";
+                FROM `smart_home`.`user_permissions` up
+                INNER JOIN `smart_home`.`permissions` p ON (p.`permission_id` = up.`permission_id`)
+                WHERE `user_id` = @USER_ID";
 
             var list = await dbController.SelectDataAsync<Permission>(sql, new
             {
                 USER_ID = userId
             }, cancellationToken);
 
-            //await LoadPermissionDescriptionsAsync(list, dbController, cancellationToken);
+            await LoadPermissionDescriptionsAsync(list, dbController, cancellationToken);
 
             return list;
         }
@@ -27,7 +27,7 @@ namespace SmartHome.Core.Services
         {
             cancellationToken.ThrowIfCancellationRequested();
             // Step 1: Delete all permissions for the user.
-            string sql = "DELETE FROM user_permissions WHERE user_id = @USER_ID";
+            string sql = "DELETE FROM `smart_home`.`user_permissions` WHERE `user_id` = @USER_ID";
             await dbController.QueryAsync(sql, new
             {
                 USER_ID = user.UserId
@@ -36,7 +36,7 @@ namespace SmartHome.Core.Services
             // Step 2: Add all permissions from the object back.
             foreach (var permission in user.Permissions)
             {
-                sql = @"INSERT INTO user_permissions
+                sql = @"INSERT INTO `smart_home`.`user_permissions`
     (
     user_id,
     permission_id
@@ -55,12 +55,30 @@ namespace SmartHome.Core.Services
 
             }
         }
+
         public static async Task<List<Permission>> GetAllAsync(IDbController dbController)
         {
-            string sql = "SELECT * FROM permissions";
+            string sql = "SELECT * FROM `smart_home`.`permissions`";
 
             var list = await dbController.SelectDataAsync<Permission>(sql);
+            await LoadPermissionDescriptionsAsync(list, dbController);
             return list;
+        }
+
+        private static async Task LoadPermissionDescriptionsAsync(List<Permission> list, IDbController dbController, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (list.Any())
+            {
+                IEnumerable<int> permissionIds = list.Select(x => x.Id);
+                string sql = $"SELECT * FROM `smart_home`.`permission_description` WHERE `permission_id` IN ({string.Join(",", permissionIds)})";
+                List<PermissionDescription> descriptions = await dbController.SelectDataAsync<PermissionDescription>(sql, null, cancellationToken);
+
+                foreach (var permission in list)
+                {
+                    permission.Description = descriptions.Where(x => x.PermissionId == permission.Id).ToList();
+                }
+            }
         }
     }
 }

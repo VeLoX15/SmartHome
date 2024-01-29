@@ -1,0 +1,16 @@
+﻿@page "/Rooms/LivingRoom"
+@attribute [Authorize]
+@inject IStringLocalizer<App> localizer
+
+<PageTitle>@localizer["TABLEBRICKS"] - @localizer["LIVING_ROOM"]</PageTitle>
+
+    <h3>@localizer["LIVING_ROOM"]</h3>
+
+<img src="assets/img/rooms/living_room.svg" alt="@localizer["LIVING_ROOM"]" style="max-height: 900px;">
+
+
+<label for="checked" style="padding: 10px 10px 10px 0">Left Desk</label>
+<SfSwitch @bind-Checked="IsLeftDesk" @onclick="async () => await Client.ToggleDevice(1, !IsLeftDesk)"></SfSwitch>
+
+<label for="checked" style="padding: 10px 10px 10px 0">Right Desk</label>
+<SfSwitch @bind-Checked="IsRightDesk" @onclick="async () => await Client.ToggleDevice(2, !IsRightDesk)"></SfSwitch>
