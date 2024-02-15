@@ -1,6 +1,7 @@
 using Dapper;
 using DbController.TypeHandler;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Serilog;
 using SmartHome.Core.Services;
 using Syncfusion.Blazor;
 using System.Reflection;
@@ -40,6 +41,9 @@ namespace SmartHome
             {
                 options.ResourcesPath = "Languages";
             });
+
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(builder.Configuration).CreateLogger();
 
             builder.Configuration.AddJsonFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "appsettings.json"), false, true);
 

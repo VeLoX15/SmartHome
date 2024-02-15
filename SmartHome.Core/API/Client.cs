@@ -1,4 +1,5 @@
-﻿using SmartHome.Core.Services;
+﻿using Serilog;
+using SmartHome.Core.Services;
 
 namespace SmartHome.Core.API
 {
@@ -14,7 +15,9 @@ namespace SmartHome.Core.API
                 var content = new StringContent(jsonBody);
                 content.Headers.ContentType.MediaType = "application/json";
 
+                Log.Information("Device: {0} ({1})",smartPlugId, powerOn);
                 HttpResponseMessage response = await client.PutAsync(apiUrl, content);
+
             }
         }
     }

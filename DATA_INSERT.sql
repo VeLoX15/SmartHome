@@ -1,7 +1,7 @@
 #
 # Core data for the Tablebricks Automation Interface
 # 
-# Copyright (c) 2023 Tablebricks
+# Copyright (c) 2024 Tablebricks
 #
 #------------------------------------------------------------------
 #

@@ -81,12 +81,12 @@ namespace SmartHome.Core.Services
             return list;
         }
 
-        public static string ConnectionString => _configuration?["ConnectionString"] ?? string.Empty;
+        public static string ConnectionString => _configuration?["MySQL:ConnectionString"] ?? string.Empty;
 
         public static string BridgeIP => _configuration?["HueConnection:BridgeIP"] ?? string.Empty;
         public static string UserID => _configuration?["HueConnection:UserID"] ?? string.Empty;
 
-        public static int PageLimit => _configuration?.GetValue<int>("PageLimit") ?? 30;
+        public static int PageLimit => _configuration?.GetValue<int>("Filter:PageLimit") ?? 30;
 
         public static CultureInfo ToCulture(this ILocalizationHelper helper)
         {
